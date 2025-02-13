@@ -10,8 +10,8 @@ import (
 var ErrorMsg = "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
 
 var NoZeroLogMsgfAnalyzer = &analysis.Analyzer{
-	Name: "todo",
-	Doc:  "finds todos without author",
+	Name: "nozerologmsgf",
+	Doc:  "Finds .Msgf use on a zerolog Event after chained .Error use",
 	Run:  msgfLintRun,
 }
 
@@ -54,7 +54,6 @@ func msgfLintRun(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
-// TODO: check for aliased or dot imports of zerolog
 // See if node is the .Msgf selector expression on a zerolog.Event.
 func isMsgfExprNode(pass *analysis.Pass, node ast.Node, underlyingReceiverType types.Type) (bool, *ast.SelectorExpr) {
 	// Look for method calls
