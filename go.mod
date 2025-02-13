@@ -1,6 +1,6 @@
 module github.com/Stork-Oracle/nozerologmsgf
 
-go 1.22.0
+go 1.23.0
 
 require (
 	github.com/test-go/testify v1.1.4
