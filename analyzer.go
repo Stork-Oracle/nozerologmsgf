@@ -1,23 +1,38 @@
-package analyzer
+package linter
 
 import (
 	"go/ast"
 	"go/types"
 
+	"github.com/golangci/plugin-module-register/register"
 	"golang.org/x/tools/go/analysis"
 )
 
-var ErrorMsg = "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
-
-// Imported by a main package and function to be compiled and used by golangci-lint.
-var Analyzer = &analysis.Analyzer{
-	Name: "nozerologmsgf",
-	Doc:  "Reports zerolog.Msgf usage after Error()",
-	Run:  msgfLintRun,
+func init() {
+	register.Plugin("nozerologmsgf", New)
 }
 
-func New(conf any) ([]*analysis.Analyzer, error) {
-	return []*analysis.Analyzer{Analyzer}, nil
+var ErrorMsg = "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
+
+type NoZeroLogMsgfPlugin struct {
+}
+
+func New(settings any) (register.LinterPlugin, error) {
+	return &NoZeroLogMsgfPlugin{}, nil
+}
+
+func (*NoZeroLogMsgfPlugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
+	return []*analysis.Analyzer{
+		{
+			Name: "nozerologmsgf",
+			Doc:  "Reports zerolog.Msgf usage after Error()",
+			Run:  msgfLintRun,
+		},
+	}, nil
+}
+
+func (f *NoZeroLogMsgfPlugin) GetLoadMode() string {
+	return register.LoadModeSyntax
 }
 
 // Run function in the MsgfLintAnalyzer implementation.
