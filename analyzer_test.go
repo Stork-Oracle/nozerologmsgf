@@ -5,22 +5,12 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/golangci/plugin-module-register/register"
 	"github.com/test-go/testify/require"
 	"golang.org/x/tools/go/analysis/analysistest"
 )
 
 func TestPluginExample(t *testing.T) {
-	newPlugin, err := register.GetPlugin("nozerologmsgf")
-	require.NoError(t, err)
-
-	plugin, err := newPlugin(nil)
-	require.NoError(t, err)
-
-	analyzers, err := plugin.BuildAnalyzers()
-	require.NoError(t, err)
-
-	analysistest.Run(t, testdataDir(t), analyzers[0], "p")
+	analysistest.Run(t, testdataDir(t), NoZeroLogMsgfAnalyzer, "p")
 }
 
 func testdataDir(t *testing.T) string {

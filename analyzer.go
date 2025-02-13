@@ -4,35 +4,15 @@ import (
 	"go/ast"
 	"go/types"
 
-	"github.com/golangci/plugin-module-register/register"
 	"golang.org/x/tools/go/analysis"
 )
 
-func init() {
-	register.Plugin("nozerologmsgf", New)
-}
-
 var ErrorMsg = "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
 
-type NoZeroLogMsgfPlugin struct {
-}
-
-func New(settings any) (register.LinterPlugin, error) {
-	return &NoZeroLogMsgfPlugin{}, nil
-}
-
-func (*NoZeroLogMsgfPlugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
-	return []*analysis.Analyzer{
-		{
-			Name: "nozerologmsgf",
-			Doc:  "Reports zerolog.Msgf usage after Error()",
-			Run:  msgfLintRun,
-		},
-	}, nil
-}
-
-func (f *NoZeroLogMsgfPlugin) GetLoadMode() string {
-	return register.LoadModeSyntax
+var NoZeroLogMsgfAnalyzer = &analysis.Analyzer{
+	Name: "todo",
+	Doc:  "finds todos without author",
+	Run:  msgfLintRun,
 }
 
 // Run function in the MsgfLintAnalyzer implementation.
