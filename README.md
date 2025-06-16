@@ -41,7 +41,21 @@ For example, with golangci-lint v1.64.8:
 Once dependencies are aligned, build the plugin by running:
 
 ```bash
-go build -buildmode=plugin plugin/nozerologmsgf.go
+golangci-lint custom -v
 ```
 
-This will create a version of nozerologmsgf compatible with your golangci-lint installation.
+This needs to be run from the directory with .custom-gcl.yml, which is currently in /stork-aggregator. This command will create a custom executable version of golangci-lint, called custom-gcl, that can be run by the IDE. 
+
+```json
+{
+   ...
+   "go.formatTool": "custom",
+      "go.alternateTools": {
+         "golangci-lint": "${workspaceFolder}/custom-gcl",
+         "customFormatter": "${workspaceFolder}/custom-gcl",
+      },
+   ... 
+}
+```
+
+Make sure your settings.json uses the new custom-gcl. You must also set the Go extension to use the pre-release version.
