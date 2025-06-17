@@ -18,6 +18,13 @@ There were some issues when installing and using Go via brew. I recommend using 
 gvm install go1.24.3
 gvm use go1.24.3 --default
 ```
+You may have to add `[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"` to the top of your .zshrc.
+A known problem is the IDE not using go tools (gopls, dlv) built with the new go version.
+Try running:
+```
+gvm pkgset create go1.24.3-global
+gvm pkgset use go1.24.3-global --default
+```
 
 ### Installing golangci-lint
 ```
