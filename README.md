@@ -9,36 +9,25 @@ This linter helps maintain consistent logging practices by detecting cases where
 ## Building the Linter
 
 ### Prerequisites
-- golangci-lint
-- Go (version matching your golangci-lint installation)
+- Go (version 1.24.3)
+- golangci-lint (version 2.1.6)
 
-### Version Compatibility
-
-The linter must be built with dependencies matching your golangci-lint version. To check your golangci-lint version:
-
-```bash
-golangci-lint version
+### Installing Go
+There were some issues when installing and using Go via brew. I recommend using gvm:
+```
+gvm install go1.24.3
+gvm use go1.24.3 --default
 ```
 
-### Required Dependencies
-
-1. Check your golangci-lint's tools version by running:
-```bash
-golangci-lint version --debug | grep "golang.org/x/tools"
+### Installing golangci-lint
 ```
-
-2. Update `go.mod` to match:
-   - Go version from golangci-lint
-   - `golang.org/x/tools` version from the debug output
-
-For example, with golangci-lint v1.64.8:
-- Set Go version to 1.23.8
-- Set `golang.org/x/tools` to v0.31.0
-- Run `go mod tidy`
+go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.6
+```
+If you previously had golangci-lint installed, make sure that your path is pointing to the correct one.
 
 ### Building
 
-Once dependencies are aligned, build the plugin by running:
+Once it is confirmed that golangci-lint was build with the same version of go you are running, build the plugin by running:
 
 ```bash
 golangci-lint custom -v
@@ -46,16 +35,29 @@ golangci-lint custom -v
 
 This needs to be run from the directory with .custom-gcl.yml, which is currently in /stork-aggregator. This command will create a custom executable version of golangci-lint, called custom-gcl, that can be run by the IDE. 
 
+### Settings
+
 ```json
 {
    ...
-   "go.formatTool": "custom",
-      "go.alternateTools": {
-         "golangci-lint": "${workspaceFolder}/custom-gcl",
-         "customFormatter": "${workspaceFolder}/custom-gcl",
-      },
+   "go.lintTool": "golangci-lint",
+    "go.lintFlags": [
+        "--config=${workspaceFolder}/.golangci.yaml"
+    ],
+    "go.alternateTools": {
+        "golangci-lint": "${workspaceFolder}/custom-gcl",
+        "customFormatter": "${workspaceFolder}/custom-gcl",
+    },
+    "go.lintOnSave": "package",
    ... 
 }
 ```
 
 Make sure your settings.json uses the new custom-gcl. You must also set the Go extension to use the pre-release version.
+Once this is done, make sure you set your IDE's linter to golangci-lint-v2.
+
+Also, make sure that your IDE is running the correct version of the go language server, gopls (version 0.18.1)
+
+### Usage
+With the settings.json configured as above, the IDE should automatically lint and highlight on save.
+To run from the command line, look at the `make lint` command.
