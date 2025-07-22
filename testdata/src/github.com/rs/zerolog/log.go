@@ -2,7 +2,7 @@ package zerolog
 
 type Logger struct{}
 
-func New(w interface{}) Logger {
+func New(w any) Logger {
 	return Logger{}
 }
 
@@ -26,4 +26,4 @@ func (e *Event) Bool(key string, value bool) *Event {
 
 func (e *Event) Msg(msg string) {}
 
-func (e *Event) Msgf(format string, v ...interface{}) {}
+func (e *Event) Msgf(format string, v ...any) {}
